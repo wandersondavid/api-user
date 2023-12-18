@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator erd {
+  provider                  = "prisma-erd-generator"
+  output                    = "./ERD.svg"
+  theme                     = "dark"
+  includeRelationFromFields = true
+}
+
+model Users {
+  id                                String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                              String
+  document                          String    @unique
+  email                             String    @unique
+  password                          String
+  code_forget_password              String?
+  active                            Boolean   @default(true)
+  hash_recovery_password            String?   @unique
+  hash_verified_email               String?   @unique
+  verified_email                    Boolean   @default(false)
+  created_at_recovery_password_hash DateTime?
+  created_at                        DateTime  @default(now())
+  updated_at                        DateTime  @updatedAt
+  deleted                           Boolean   @default(false)
+}
